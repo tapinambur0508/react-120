@@ -11,43 +11,43 @@
 // }
 
 interface ProductType {
-  title: string
-  price: number
-  isFavourite: boolean
+  title: string;
+  price: number;
+  isFavourite: boolean;
 }
 
 const product: ProductType = {
-  title: 'lemon',
+  title: "lemon",
   price: 50,
   isFavourite: true,
-}
+};
 
-console.log(product)
+console.log(product);
 
 // product.price
 
 // product.tittle = "test"
 
 interface StudentType {
-  readonly studentName: string
-  course: string
-  time: number
-  isFavourite?: boolean
-  avatar?: string
+  readonly studentName: string;
+  course: string;
+  time: number;
+  isFavourite?: boolean;
+  avatar?: string;
 }
 
 const student: StudentType = {
-  studentName: 'Oleg',
-  course: 'React',
+  studentName: "Oleg",
+  course: "React",
   time: 10,
   isFavourite: true,
-}
+};
 
 const student2: StudentType = {
-  studentName: 'Olha',
-  course: 'JS',
+  studentName: "Olha",
+  course: "JS",
   time: 8,
-  avatar: './image.jpg',
-}
+  avatar: "./image.jpg",
+};
 
 // student2.studentName = "Tetiana"; буде помилка, тому що цей ключ доступний лише для читання;

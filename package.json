@@ -14,5 +14,8 @@
   },
   "overrides": {
     "vite": "npm:rolldown-vite@7.1.14"
+  },
+  "dependencies": {
+    "axios": "^1.12.2"
   }
 }

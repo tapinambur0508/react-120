@@ -6,11 +6,11 @@
  */
 
 function sum(x: number, y: number): number {
-  const result = x + y
-  return result
+  const result = x + y;
+  return result;
 }
 
-sum(1, 2)
+sum(1, 2);
 // sum(1, "2"); буде помилка, бо передаємо другим аргументом рядок
 
 // -------------------------------------------------------------------
@@ -32,90 +32,90 @@ sum(1, 2)
 // ---------------------------------------------------------------------
 
 function test(num: number): string {
-  let value = 'test'
-  let result = value + num
-  return result
+  let value = "test";
+  let result = value + num;
+  return result;
 }
-const a = Number('6')
-test(a)
+const a = Number("6");
+test(a);
 
 // ----------------------------------------------------------------------
 
 interface StudentType {
-  studentName: string
-  course: string
-  time: number
+  studentName: string;
+  course: string;
+  time: number;
 }
 
 const students: StudentType[] = [
   {
-    studentName: 'Olha',
-    course: 'JS',
+    studentName: "Olha",
+    course: "JS",
     time: 8,
   },
   {
-    studentName: 'Oleg',
-    course: 'React',
+    studentName: "Oleg",
+    course: "React",
     time: 8,
   },
   {
-    studentName: 'Tetiana',
-    course: 'HTML/CSS',
+    studentName: "Tetiana",
+    course: "HTML/CSS",
     time: 3,
   },
-]
+];
 
 function showCourses(studentsArr: StudentType[]): string[] {
-  const coursesList = studentsArr.map((student) => student.course)
-  return coursesList
+  const coursesList = studentsArr.map((student) => student.course);
+  return coursesList;
 }
 
-console.log(showCourses(students))
+console.log(showCourses(students));
 
 // напишемо функцію з опціональними параметрами
 function makeMessage(username: string, login?: string): string | number {
   if (login !== undefined) {
-    return `${username} has login ${login}`
+    return `${username} has login ${login}`;
   } else {
-    return `${username} `
+    return `${username} `;
   }
 }
 
-makeMessage('Oleg', 'test')
-makeMessage('Tetiana', undefined)
+makeMessage("Oleg", "test");
+makeMessage("Tetiana", undefined);
 
 // -------------------------------------------------------
 
 interface ProductType {
-  title: string
-  price: number
+  title: string;
+  price: number;
 }
 
 interface BasketType {
-  owner: string
-  products: ProductType[]
-  showOwner: (x: number, y?: string) => string
-  addProduct: (product: ProductType) => void
+  owner: string;
+  products: ProductType[];
+  showOwner: (x: number, y?: string) => string;
+  addProduct: (product: ProductType) => void;
 }
 
 // типізація методів обʼєктів
 const basket: BasketType = {
-  owner: 'Oleg',
+  owner: "Oleg",
   products: [],
   // showOwner: () => {}
   showOwner(x) {
-    return `The owner of basket is ${this.owner} and has ${x} products`
+    return `The owner of basket is ${this.owner} and has ${x} products`;
   },
   addProduct(product: ProductType) {
-    this.products.push(product)
+    this.products.push(product);
     // return this.products
   },
-}
+};
 
-basket.showOwner(5)
+basket.showOwner(5);
 
 const avocado: ProductType = {
-  title: 'avocado',
+  title: "avocado",
   price: 100,
-}
-basket.addProduct(avocado)
+};
+basket.addProduct(avocado);

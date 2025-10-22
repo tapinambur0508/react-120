@@ -7,38 +7,38 @@
 // const products: string[] = ["cherry", "lemon", "apple"]
 // другий спосіб
 
-const products: Array<string> = ['cherry', 'lemon', 'apple']
+const products: Array<string> = ["cherry", "lemon", "apple"];
 
 // products. ts підкаже які методи можна використовувати для роботи з масивами
 
 interface productsBasketType {
-  title: string
-  price: number
-  isFavorite: boolean
+  title: string;
+  price: number;
+  isFavorite: boolean;
 }
 
 const productsBasket: productsBasketType[] = [
   {
-    title: 'lemon',
+    title: "lemon",
     price: 100,
     isFavorite: true,
   },
   {
-    title: 'apple',
+    title: "apple",
     price: 10,
     isFavorite: false,
   },
   {
-    title: 'cherry',
+    title: "cherry",
     price: 200,
     isFavorite: true,
   },
   {
-    title: 'avocado',
+    title: "avocado",
     price: 80,
     isFavorite: true,
   },
-]
+];
 
 // productsBasket[0].price. можемо глянути які доступні властивості в productsBasket[0] через крапку чи методи для значення ключа price
 
