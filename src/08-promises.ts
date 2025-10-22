@@ -1,3 +1,9 @@
+/**
+ * How to compile this file
+ *
+ * npx tsc ./src/08-promises.ts --target esnext
+ */
+
 interface User {
   name: string;
   age: number;
