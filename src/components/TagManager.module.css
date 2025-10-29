@@ -1,0 +1,10 @@
+.container {
+  display: flex;
+}
+
+.tag {
+  padding: 5px 10px;
+  margin-left: 15px;
+  color: white;
+  background-color: blue;
+}
