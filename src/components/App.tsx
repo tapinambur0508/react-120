@@ -1,44 +1,82 @@
 import { useState } from "react";
 
-import ClickCounter from "./ClickCounter";
-import CountDisplay from "./CountDisplay";
+import axios from "axios";
+// import OrderForm from "./OrderForm/OrderForm";
 
-import TagManager from "./TagManager";
+import SearchForm from "./SearchForm/SearchForm";
+import ArticleList from "./ArticleList/ArticleList";
+
+import type { Article } from "../types/article";
+
+interface ArticlesResponse {
+  hitsPerPage: number;
+  nbHits: number;
+  nbPages: number;
+  page: number;
+  hits: Article[];
+}
+
+console.log(import.meta.env.MY_ENV);
 
 export default function App() {
-  const [count, setCount] = useState<number>(0);
+  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  //   event.preventDefault();
 
-  const handleIncrement = () => {
-    setCount((prevCount) => {
-      return prevCount + 1;
-    });
-  };
+  //   const form = event.currentTarget;
+  //   const formData = new FormData(form);
+  //   console.log(formData);
 
-  const handleDecrement = () => {
-    setCount((prevCount) => {
-      if (prevCount > 0) {
-        return prevCount - 1;
-      }
-      return prevCount;
-    });
+  //   const username = formData.get("username");
+  //   const password = formData.get("password");
+
+  //   console.log({ username, password });
+
+  //   form.reset();
+  // };
+
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+
+  const handleSearch = async (topic: string) => {
+    try {
+      setIsLoading(true);
+      setIsError(false);
+      setArticles([]);
+      const { data } = await axios.get<ArticlesResponse>(
+        `${import.meta.env.VITE_HN_URL}/search?query=${topic}`,
+      );
+
+      setArticles(data.hits);
+    } catch {
+      setIsError(true);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
     <>
-      <h1>State in React</h1>
-      <p>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Necessitatibus,
-        quam? Minima, corporis quas! Ex harum ullam expedita quisquam est aut
-        officia, consequuntur odio porro hic. Nemo amet aspernatur fugit eos.
-      </p>
-      <CountDisplay count={count} />
+      <h1>Form</h1>
 
-      <ClickCounter
-        onIncrement={handleIncrement}
-        onDecrement={handleDecrement}
-      />
+      {/* <OrderForm />
+      <OrderForm /> */}
 
-      <TagManager />
+      {/* <form onSubmit={handleSubmit}>
+        <div>
+          <input type="text" name="username" />
+        </div>
+        <div>
+          <input type="password" name="password" />
+        </div>
+
+        <button type="submit">Submit</button>
+      </form> */}
+
+      <SearchForm onSearch={handleSearch} />
+      {isLoading && <strong>Loading ...</strong>}
+      {isError && <p>Oops, Something went wrong. Please try again!</p>}
+      {articles.length > 0 && <ArticleList items={articles} />}
     </>
   );
 }
