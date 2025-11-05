@@ -1,82 +1,84 @@
-import { useState } from "react";
-
 import axios from "axios";
-// import OrderForm from "./OrderForm/OrderForm";
+import { useState, useEffect } from "react";
 
-import SearchForm from "./SearchForm/SearchForm";
-import ArticleList from "./ArticleList/ArticleList";
+import Timer from "./Timer";
+import Sidebar from "./Sidebar";
 
-import type { Article } from "../types/article";
-
-interface ArticlesResponse {
-  hitsPerPage: number;
-  nbHits: number;
-  nbPages: number;
-  page: number;
-  hits: Article[];
-}
-
-console.log(import.meta.env.MY_ENV);
+import type { Character } from "../types/character";
 
 export default function App() {
-  // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-  //   event.preventDefault();
+  const [character, setCharacter] = useState<Character | null>(null);
+  const [counter, setCounter] = useState<number>(() => {
+    const value = localStorage.getItem("counter");
 
-  //   const form = event.currentTarget;
-  //   const formData = new FormData(form);
-  //   console.log(formData);
-
-  //   const username = formData.get("username");
-  //   const password = formData.get("password");
-
-  //   console.log({ username, password });
-
-  //   form.reset();
-  // };
-
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
-
-  const handleSearch = async (topic: string) => {
-    try {
-      setIsLoading(true);
-      setIsError(false);
-      setArticles([]);
-      const { data } = await axios.get<ArticlesResponse>(
-        `${import.meta.env.VITE_HN_URL}/search?query=${topic}`,
-      );
-
-      setArticles(data.hits);
-    } catch {
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
+    if (value !== null) {
+      return JSON.parse(value);
     }
+
+    return 0;
+  });
+  const [isTimerVisible, setIsTimerVisible] = useState<boolean>(true);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+
+  // useEffect(() => {
+  //   console.log("useEffect");
+
+  //   const fetchCharacter = async () => {
+  //     const {data} = await axios.get<Character>("https://swapi.info/api/people/1");
+
+  //     setCharacter(data);
+  //   }
+
+  //   fetchCharacter();
+  // }, []);
+
+  useEffect(() => {
+    console.log("useEffect", { counter });
+
+    localStorage.setItem("counter", JSON.stringify(counter));
+
+    return () => {
+      console.log("After");
+    };
+  }, [counter]);
+
+  // useEffect(() => {
+  //   console.log("useEffect", {character});
+  // }, [character]);
+
+  // useEffect(() => {
+  //   console.log("useEffect", {counter, character});
+  // }, [counter, character]);
+
+  const handleClick = () => {
+    setCounter((prevCounter) => prevCounter + 1);
+  };
+
+  const toggleTimerVisible = () => {
+    setIsTimerVisible((prevIsTimerVisible) => !prevIsTimerVisible);
+  };
+
+  const openSidebar = () => {
+    setIsSidebarOpen(true);
+  };
+
+  const closeSidebar = () => {
+    setIsSidebarOpen(false);
   };
 
   return (
     <>
-      <h1>Form</h1>
+      <h1>Lesson 6</h1>
 
-      {/* <OrderForm />
-      <OrderForm /> */}
+      <pre>{JSON.stringify(character, null, 2)}</pre>
 
-      {/* <form onSubmit={handleSubmit}>
-        <div>
-          <input type="text" name="username" />
-        </div>
-        <div>
-          <input type="password" name="password" />
-        </div>
+      <button onClick={handleClick}>Clicks: {counter}</button>
+      <button onClick={toggleTimerVisible}>Toggle timer</button>
+      <button onClick={openSidebar}>Open Sidebar</button>
 
-        <button type="submit">Submit</button>
-      </form> */}
+      {isTimerVisible && <Timer />}
 
-      <SearchForm onSearch={handleSearch} />
-      {isLoading && <strong>Loading ...</strong>}
-      {isError && <p>Oops, Something went wrong. Please try again!</p>}
-      {articles.length > 0 && <ArticleList items={articles} />}
+      {isSidebarOpen && <Sidebar onClose={closeSidebar} />}
     </>
   );
 }
