@@ -1,84 +1,83 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-import Timer from "./Timer";
-import Sidebar from "./Sidebar";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import ReactPaginate from "react-paginate";
 
-import type { Character } from "../types/character";
+// import { fetchPerson } from "../services/swapiService";
+
+import SearchForm from "./SearchForm/SearchForm";
+import ArticleList from "./ArticleList/ArticleList";
+
+import { fetchArticles } from "../services/articleService";
+
+import css from "./App.module.css";
 
 export default function App() {
-  const [character, setCharacter] = useState<Character | null>(null);
-  const [counter, setCounter] = useState<number>(() => {
-    const value = localStorage.getItem("counter");
+  // const [counter, setCounter] = useState<number>(0);
 
-    if (value !== null) {
-      return JSON.parse(value);
-    }
+  // const { data, isLoading, isError } = useQuery({
+  //   queryKey: ["character", counter],
+  //   queryFn: () => fetchPerson(counter),
+  //   enabled: counter > 0,
+  //   staleTime: 60 * 1000, // 1 minute
+  // });
 
-    return 0;
+  // return (
+  //   <>
+  //     <button onClick={() => setCounter((prevCounter) => prevCounter - 1)}>
+  //       -
+  //     </button>
+  //     <span>{counter}</span>
+  //     <button onClick={() => setCounter((prevCounter) => prevCounter + 1)}>
+  //       +
+  //     </button>
+  //     {isLoading && <p>Loading ...</p>}
+  //     {isError && <p>Oops. Something went wrong</p>}
+  //     <h1>{data?.name}</h1>
+  //     <pre>{JSON.stringify(data, null, 2)}</pre>
+  //   </>
+  // );
+  const [topic, setTopic] = useState("");
+  const [page, setPage] = useState(1);
+
+  const { data, isLoading, isSuccess, isError } = useQuery({
+    queryKey: ["articles", topic, page],
+    queryFn: () => fetchArticles(topic, page),
+    enabled: topic !== "",
+    placeholderData: keepPreviousData,
   });
-  const [isTimerVisible, setIsTimerVisible] = useState<boolean>(true);
-  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
 
-  // useEffect(() => {
-  //   console.log("useEffect");
-
-  //   const fetchCharacter = async () => {
-  //     const {data} = await axios.get<Character>("https://swapi.info/api/people/1");
-
-  //     setCharacter(data);
-  //   }
-
-  //   fetchCharacter();
-  // }, []);
-
-  useEffect(() => {
-    console.log("useEffect", { counter });
-
-    localStorage.setItem("counter", JSON.stringify(counter));
-
-    return () => {
-      console.log("After");
-    };
-  }, [counter]);
-
-  // useEffect(() => {
-  //   console.log("useEffect", {character});
-  // }, [character]);
-
-  // useEffect(() => {
-  //   console.log("useEffect", {counter, character});
-  // }, [counter, character]);
-
-  const handleClick = () => {
-    setCounter((prevCounter) => prevCounter + 1);
+  const handleSearch = (topic: string) => {
+    setTopic(topic);
+    setPage(1);
   };
 
-  const toggleTimerVisible = () => {
-    setIsTimerVisible((prevIsTimerVisible) => !prevIsTimerVisible);
-  };
-
-  const openSidebar = () => {
-    setIsSidebarOpen(true);
-  };
-
-  const closeSidebar = () => {
-    setIsSidebarOpen(false);
+  const handlePageClick = ({ selected }: { selected: number }) => {
+    setPage(selected + 1);
   };
 
   return (
     <>
-      <h1>Lesson 6</h1>
-
-      <pre>{JSON.stringify(character, null, 2)}</pre>
-
-      <button onClick={handleClick}>Clicks: {counter}</button>
-      <button onClick={toggleTimerVisible}>Toggle timer</button>
-      <button onClick={openSidebar}>Open Sidebar</button>
-
-      {isTimerVisible && <Timer />}
-
-      {isSidebarOpen && <Sidebar onClose={closeSidebar} />}
+      <SearchForm onSearch={handleSearch} />
+      {isLoading && <p>Loading...</p>}
+      {isError && <p>Oops! Something went wrong:(</p>}
+      {isSuccess && (
+        <>
+          <ArticleList items={data.hits} />
+          <ReactPaginate
+            breakLabel="..."
+            nextLabel=">"
+            onPageChange={handlePageClick}
+            containerClassName={css.pagination}
+            activeClassName={css.active}
+            pageRangeDisplayed={5}
+            pageCount={data.nbPages}
+            forcePage={page - 1}
+            previousLabel="<"
+            renderOnZeroPageCount={null}
+          />
+        </>
+      )}
     </>
   );
 }

@@ -1,5 +1,7 @@
 export interface Character {
   name: string;
-  birth_year: number;
+  height: string;
+  mass: string;
   gender: string;
+  films: string[];
 }
